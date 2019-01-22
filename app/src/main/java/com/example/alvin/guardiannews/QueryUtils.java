@@ -1,7 +1,6 @@
 package com.example.alvin.guardiannews;
 
 
-import android.nfc.Tag;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -184,31 +183,21 @@ public final class QueryUtils {
                 String webPubDate = results.getString("webPublicationDate");
 
                 // Extract contributor's last name(s) if available
-                JSONArray tagsArray = results.getJSONArray("tags");
+                JSONObject fieldsObj = results.getJSONObject("fields");
 
                 // If author name does not exist, construct Story now
                 // Create a new {@link Story} object without author name now
-                if (tagsArray.isNull(0)) {
+                if (fieldsObj == null) {
                     Story story = new Story(sectionName, webUrl, webTitle, webPubDate);
                     /** Add the new {@link Story} to the list of stories */
                     stories.add(story);
                 } else {
-
-                    // Get single contributor at first position within list of contributors
-                    JSONObject contributor = tagsArray.getJSONObject(0);
-
-                    // Get contributor's last name and prepend with "by"
-                    String lastName = "by  ";
-                    lastName = lastName + contributor.getString("lastName");
-                    // If 2+ author, add "et al." instead of getting all the names
-                    if (tagsArray.length() > 1) {
-                        lastName = lastName + " et al.";
-                    }
-
-                    Story story = new Story(sectionName, webUrl, webTitle, webPubDate, lastName);
+                    // Get author's name and prepend with "by"
+                    String authorName = "by  ";
+                    authorName = authorName + fieldsObj.getString("byline");
+                    Story story = new Story(sectionName, webUrl, webTitle, webPubDate, authorName);
                     /** Add the new {@link Story} to list of stories*/
                     stories.add(story);
-
                 }
             }
 
@@ -217,7 +206,7 @@ public final class QueryUtils {
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the Guardian JSON results", e);
-            Log.i("QueryUtils", "Possibly missing tag, displaying parsed articles for now...");
+            Log.i("QueryUtils", "Possibly missing tag or improper query");
         }
 
         // Return the list of stories

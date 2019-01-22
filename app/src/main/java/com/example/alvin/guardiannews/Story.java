@@ -31,7 +31,7 @@ public class Story {
      * @param webUrl      Link to use for an implicit intent to a web browser
      * @param webTitle    Name of news story on the web
      * @param webPubDate  Combined date and time of publication
-     * @param authorName  Author(s) last name, if available
+     * @param authorName  Author(s) name, if available
      */
     public Story(String sectionName, String webUrl, String webTitle, String webPubDate, String authorName) {
         mSectionName = sectionName;
