@@ -1,6 +1,7 @@
 package com.example.alvin.guardiannews;
 
 
+import android.nfc.Tag;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,7 +25,11 @@ import java.util.List;
  */
 public final class QueryUtils {
 
-    /** Tag for the log messages */
+
+    // Private members
+    private static final int READ_TIMEOUT = 10000;
+    private static final int CONNECT_TIMEOUT = 15000;
+    // Tag for the log messages
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
     /**
@@ -85,14 +90,14 @@ public final class QueryUtils {
         InputStream inputStream = null;
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setReadTimeout(10000 /* milliseconds */);
-            urlConnection.setConnectTimeout(15000 /* milliseconds */);
+            urlConnection.setReadTimeout(READ_TIMEOUT);
+            urlConnection.setConnectTimeout(CONNECT_TIMEOUT);
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
 
             // If the request was successful (response code 200),
             // then read the input stream and parse the response.
-            if (urlConnection.getResponseCode() == 200) {
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
@@ -178,12 +183,33 @@ public final class QueryUtils {
                 // Extract the value for the key called "webPublicationDate"
                 String webPubDate = results.getString("webPublicationDate");
 
-                // Create a new {@link Story} object with the magnitude, location, time,
-                // and url from the JSON response.
-                Story story = new Story(sectionName, webUrl, webTitle, webPubDate);
+                // Extract contributor's last name(s) if available
+                JSONArray tagsArray = results.getJSONArray("tags");
 
-                // Add the new {@link Story} to the list of stories.
-                stories.add(story);
+                // If author name does not exist, construct Story now
+                // Create a new {@link Story} object without author name now
+                if (tagsArray.isNull(0)) {
+                    Story story = new Story(sectionName, webUrl, webTitle, webPubDate);
+                    /** Add the new {@link Story} to the list of stories */
+                    stories.add(story);
+                } else {
+
+                    // Get single contributor at first position within list of contributors
+                    JSONObject contributor = tagsArray.getJSONObject(0);
+
+                    // Get contributor's last name and prepend with "by"
+                    String lastName = "by  ";
+                    lastName = lastName + contributor.getString("lastName");
+                    // If 2+ author, add "et al." instead of getting all the names
+                    if (tagsArray.length() > 1) {
+                        lastName = lastName + " et al.";
+                    }
+
+                    Story story = new Story(sectionName, webUrl, webTitle, webPubDate, lastName);
+                    /** Add the new {@link Story} to list of stories*/
+                    stories.add(story);
+
+                }
             }
 
         } catch (JSONException e) {
@@ -191,6 +217,7 @@ public final class QueryUtils {
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the Guardian JSON results", e);
+            Log.i("QueryUtils", "Possibly missing tag, displaying parsed articles for now...");
         }
 
         // Return the list of stories

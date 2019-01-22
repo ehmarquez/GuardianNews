@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int STORY_LOADER_ID = 1;       // Important with multiple activities/loaders
     private StoryAdapter mAdapter;                      // adapter for list of stories
     private TextView mEmptyStateView;                   // TextView to display for empty story list
-    private static final String GUARDIAN_REQUEST_URL = "https://content.guardianapis.com/search";
+    private static final String GUARDIAN_REQUEST_URL = "https://content.guardianapis.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +93,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri baseUri = Uri.parse(GUARDIAN_REQUEST_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
+        uriBuilder.appendPath("search");
         uriBuilder.appendQueryParameter("format", "json");
         uriBuilder.appendQueryParameter("section", "games");
         uriBuilder.appendQueryParameter("order-by", "newest");
         uriBuilder.appendQueryParameter("page-size", "9");
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
         uriBuilder.appendQueryParameter("api-key", "test");
 
         Log.i("MainActivity", "TEST Current Uri:" + uriBuilder);
