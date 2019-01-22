@@ -78,7 +78,7 @@ public class StoryAdapter extends ArrayAdapter<Story> {
         Log.d("formatDate:", "DEBUG: Input string is: " + dateString);
         // This format will be used to parse the string object such as (ie 2019-01-22T04:12:06Z)
         // and create a date object
-        SimpleDateFormat inDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        SimpleDateFormat inDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
         // This format will be used to convert the date object into an easy
         // to read date format (ie Jan 22, 2019)
