@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         uriBuilder.appendQueryParameter("section", "games");
         uriBuilder.appendQueryParameter("order-by", "newest");
         uriBuilder.appendQueryParameter("page-size", "9");
-        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("show-fields", "byline");
         uriBuilder.appendQueryParameter("api-key", "test");
 
         Log.i("MainActivity", "TEST Current Uri:" + uriBuilder);
