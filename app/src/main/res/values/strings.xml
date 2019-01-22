@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Guardian News</string>
+    <string name="no_stories">Sorry! No stories right now...</string>
+    <string name="no_internet">Sorry! No internet connection...</string>
+</resources>
