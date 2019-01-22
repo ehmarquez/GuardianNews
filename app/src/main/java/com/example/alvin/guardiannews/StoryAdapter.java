@@ -12,8 +12,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 public class StoryAdapter extends ArrayAdapter<Story> {
 
@@ -51,11 +49,22 @@ public class StoryAdapter extends ArrayAdapter<Story> {
         TextView sectionNameView = listItemView.findViewById(R.id.section_name);
         sectionNameView.setText(currentStory.getSectionName());
 
+        // Find view for contributor's name and set appropriate text
+        TextView contributorNameView = listItemView.findViewById(R.id.contributor_name);
+        // Check if author exists
+        // If no author, set textview to be gone
+        Log.d("StoryAdatper", "DEBUG: Story has author is: " + currentStory.hasAuthor());
+        if (currentStory.hasAuthor()) {
+            contributorNameView.setText(currentStory.getAuthorName());
+        } else {
+            contributorNameView.setVisibility(View.GONE);
+        }
+
         // Find view for web title and set appropriate text
         TextView webTitleView = listItemView.findViewById(R.id.web_title);
         webTitleView.setText(currentStory.getWebTitle());
 
-         // Find view for section name and set appropriate text
+        // Find view for published date and set appropriate text
         TextView webPubDateView = listItemView.findViewById(R.id.published_date);
         String publishedDate = formatDate(currentStory.getWebPubDate());
         webPubDateView.setText(publishedDate);
@@ -66,18 +75,20 @@ public class StoryAdapter extends ArrayAdapter<Story> {
 
     // Methods for formatting time display
     private String formatDate(String dateString) {
+        Log.d("formatDate:", "DEBUG: Input string is: " + dateString);
         // This format will be used to parse the string object such as (ie 2019-01-22T04:12:06Z)
         // and create a date object
         SimpleDateFormat inDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
         // This format will be used to convert the date object into an easy
         // to read date format (ie Jan 22, 2019)
-        SimpleDateFormat outDateFormat = new SimpleDateFormat("LLL dd, yyyy");
+        SimpleDateFormat outDateFormat = new SimpleDateFormat("MMM dd, yyyy");
 
         // If parsing fails, just display the original date received from API call
         // Should not stop app from functioning or cause a crash, so fail silently
         try {
             Date date = inDateFormat.parse(dateString);
+            Log.d("formatDate:", "DEBUG: date object after parse is: " + dateString);
             return outDateFormat.format(date);
         }
         catch(ParseException e) {

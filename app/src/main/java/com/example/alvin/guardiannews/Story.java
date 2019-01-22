@@ -7,13 +7,15 @@ public class Story {
     private String mWebUrl;
     private String mWebTitle;
     private String mWebPubDate;
+    private String mAuthorName;
 
     /**
      * Constructs a new {@link Story} object.
+     *
      * @param sectionName Section name that the news story belongs in
-     * @param webUrl Link to use for an implicit intent to a web browser
-     * @param webTitle Name of news story on the web
-     * @param webPubDate Combined date and time of publication
+     * @param webUrl      Link to use for an implicit intent to a web browser
+     * @param webTitle    Name of news story on the web
+     * @param webPubDate  Combined date and time of publication
      */
     public Story(String sectionName, String webUrl, String webTitle, String webPubDate) {
         mSectionName = sectionName;
@@ -22,6 +24,29 @@ public class Story {
         mWebPubDate = webPubDate;
     }
 
+    /**
+     * Constructs a new {@link Story} object.
+     *
+     * @param sectionName Section name that the news story belongs in
+     * @param webUrl      Link to use for an implicit intent to a web browser
+     * @param webTitle    Name of news story on the web
+     * @param webPubDate  Combined date and time of publication
+     * @param authorName  Author(s) last name, if available
+     */
+    public Story(String sectionName, String webUrl, String webTitle, String webPubDate, String authorName) {
+        mSectionName = sectionName;
+        mWebUrl = webUrl;
+        mWebTitle = webTitle;
+        mWebPubDate = webPubDate;
+        mAuthorName = authorName;
+    }
+
+    // Helper method to check if Story was created with an author resource
+    public boolean hasAuthor() {
+        return mAuthorName != null;
+    }
+
+    // Getters
     public String getSectionName() {
         return mSectionName;
     }
@@ -36,5 +61,9 @@ public class Story {
 
     public String getWebPubDate() {
         return mWebPubDate;
+    }
+
+    public String getAuthorName() {
+        return mAuthorName;
     }
 }
