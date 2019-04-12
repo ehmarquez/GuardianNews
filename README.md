@@ -6,5 +6,6 @@ GuardianNews provides a news feed about Games using the Guardian API
 * Loaders to handle loading data while handling Activity/Fragment lifecycles
 * Multi threading to separate network and UI related processes
 
-** Sample output **
+**Sample output**
+
 <img src="GuardianNewsApp.jpg" width="250"/>
